@@ -1,0 +1,53 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":rebaseStalePrs",
+    ":prHourlyLimitNone"
+  ],
+  "timezone": "America/Los_Angeles",
+  "schedule": ["after 7am and before 3pm on monday"],
+  "labels": ["dependencies", "renovate"],
+  "rangeStrategy": "bump",
+  "prConcurrentLimit": 8,
+  "prCreation": "not-pending",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 4am on monday"]
+  },
+  "packageRules": [
+    {
+      "description": "Automerge safe updates",
+      "matchUpdateTypes": ["patch", "minor", "digest"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Never automerge majors",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "description": "Group non-major JS deps weekly",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm non-major dependencies"
+    },
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions dependencies",
+      "automerge": true
+    },
+    {
+      "description": "Core frontend deps require manual review",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["typescript", "react", "react-dom", "next"],
+      "automerge": false,
+      "groupName": "core frontend deps"
+    }
+  ]
+}
