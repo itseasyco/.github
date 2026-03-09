@@ -26,9 +26,14 @@
       "platformAutomerge": false
     },
     {
-      "description": "Never automerge majors",
+      "description": "Major updates: open PR against staging for automated review pipeline",
       "matchUpdateTypes": ["major"],
-      "automerge": false
+      "automerge": false,
+      "baseBranches": ["staging"],
+      "labels": ["dependencies", "renovate", "major-update"],
+      "commitMessagePrefix": "chore(major):",
+      "prTitle": "chore(deps): {{{depName}}} major update ({{{currentVersion}}} → {{{newVersion}}})",
+      "addLabels": ["needs-review"]
     },
     {
       "description": "Group non-major JS deps weekly",
@@ -43,6 +48,14 @@
       "groupName": "github actions dependencies",
       "automerge": true,
       "platformAutomerge": false
+    },
+    {
+      "description": "GitHub Actions major updates also go to staging for review",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "baseBranches": ["staging"],
+      "labels": ["dependencies", "renovate", "major-update", "needs-review"]
     },
     {
       "description": "Core frontend + backend deps require manual review",
