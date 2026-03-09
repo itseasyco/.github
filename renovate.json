@@ -4,26 +4,26 @@
     "config:recommended",
     ":dependencyDashboard",
     ":semanticCommits",
-    ":rebaseStalePrs",
-    ":prHourlyLimitNone"
+    ":rebaseStalePrs"
   ],
   "timezone": "America/Los_Angeles",
   "schedule": ["after 7am and before 3pm on monday"],
   "labels": ["dependencies", "renovate"],
   "rangeStrategy": "bump",
   "prConcurrentLimit": 8,
+  "prHourlyLimit": 4,
   "prCreation": "not-pending",
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["before 4am on monday"]
+    "schedule": ["after 3am and before 5am on tuesday"]
   },
   "packageRules": [
     {
-      "description": "Automerge safe updates",
+      "description": "Automerge safe updates (patch/minor/digest only) — CI must pass",
       "matchUpdateTypes": ["patch", "minor", "digest"],
       "automerge": true,
       "automergeType": "pr",
-      "platformAutomerge": true
+      "platformAutomerge": false
     },
     {
       "description": "Never automerge majors",
@@ -37,17 +37,23 @@
       "groupName": "npm non-major dependencies"
     },
     {
-      "description": "Group GitHub Actions updates",
+      "description": "Group GitHub Actions patch/minor/digest updates only — never automerge major Actions",
       "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["patch", "minor", "digest"],
       "groupName": "github actions dependencies",
-      "automerge": true
+      "automerge": true,
+      "platformAutomerge": false
     },
     {
-      "description": "Core frontend deps require manual review",
+      "description": "Core frontend + backend deps require manual review",
       "matchManagers": ["npm"],
-      "matchPackageNames": ["typescript", "react", "react-dom", "next"],
+      "matchPackageNames": [
+        "typescript", "react", "react-dom", "next",
+        "fastify", "@supabase/supabase-js", "@supabase/ssr",
+        "bullmq", "tailwindcss", "zod"
+      ],
       "automerge": false,
-      "groupName": "core frontend deps"
+      "groupName": "core deps (manual review)"
     }
   ]
 }
